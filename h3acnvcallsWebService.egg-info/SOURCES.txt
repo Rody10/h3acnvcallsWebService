@@ -1,7 +1,0 @@
-README.md
-pyproject.toml
-h3acnvcallsWebService.egg-info/PKG-INFO
-h3acnvcallsWebService.egg-info/SOURCES.txt
-h3acnvcallsWebService.egg-info/dependency_links.txt
-h3acnvcallsWebService.egg-info/requires.txt
-h3acnvcallsWebService.egg-info/top_level.txt
