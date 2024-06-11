@@ -1,2 +1,10 @@
 h3acnvcallsWebServiceEnv/
 h3acnvcallsWebService.egg-info
+h3acnvcallsWebService/database.db
+build/
+dist/
+htmlcov/
+.pytest_cache/
+.coverage
+instance/
+*.pyc
