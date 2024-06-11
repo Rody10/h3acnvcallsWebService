@@ -1,6 +1,6 @@
 h3acnvcallsWebServiceEnv/
 h3acnvcallsWebService.egg-info
-h3acnvcallsWebService/database.db
+*.db
 build/
 dist/
 htmlcov/
