@@ -4,4 +4,12 @@ The h3acnvcallsWebService queries a database that stores structural variants in 
 
 This web service was created to allow for simple querying of the results obtained from the structural variant analyses.
 
-The application uses Flask, sqlite3 and Jinja2.  
+The application uses Flask, sqlite3 and Jinja2.
+
+## Installation
+
+### Usage
+
+
+
+

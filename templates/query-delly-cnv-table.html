@@ -1,0 +1,36 @@
+{% extends "index.html" %}
+{%block content%}
+<div class="header">
+    <div class="icon-left">
+        <a href="/"> 
+            <img src="../static/icons/back-arrow-icon.svg" alt="Back Arrow" class="help-icon">
+        </a>           
+    </div>
+    <div class="icon-center">                
+        <a href="/"> 
+            <img src="../static/icons/home-icon.svg" alt="Home" class="home-icon">
+        </a>
+    </div>           
+    <div class="icon-right">
+        <a href="/"> 
+            <img src="../static/icons/help-icon.svg" alt="Help" class="help-icon">
+        </a>
+    </div>                                  
+</div>
+<div class="form-container">
+    <form method="POST" class="forms" action = /views.py>
+        <div class="form-group">{{ form.chromosome.label }} {{ form.chromosome() }}</div>
+        <div class="form-group">{{ form.start_position.label }} {{ form.start_position() }}</div>
+        <div class="form-group">{{ form.end_position.label }} {{ form.end_position() }}</div>
+        <div class="form-group">{{ form.number_of_calls_with_0_copies.label }} {{ form.number_of_calls_with_0_copies() }}</div>
+        <div class="form-group">{{ form.number_of_calls_with_1_copy.label }} {{ form.number_of_calls_with_1_copy() }}</div>
+        <div class="form-group">{{ form.number_of_calls_with_2_copies.label }} {{ form.number_of_calls_with_2_copies() }}</div>
+        <div class="form-group">{{ form.number_of_calls_with_3_copies.label }} {{ form.number_of_calls_with_3_copies() }}</div>
+        <div class="form-group">{{ form.number_of_calls_with_4_copies.label }} {{ form.number_of_calls_with_4_copies() }}</div>
+        <div class="form-group">{{ form.number_of_calls_with_5_copies.label }} {{ form.number_of_calls_with_5_copies() }}</div>
+        <div class="form-group">{{ form.number_of_calls_with_6_copies.label }} {{ form.number_of_calls_with_6_copies() }}</div>
+        <div class="form-group">{{ form.number_of_calls_with_7_or_more_copies.label }} {{ form.number_of_calls_with_7_or_more_copies() }}</div>
+        <button type="submit" class="query-btn">Submit query</button>
+    </form>
+</div>
+{%endblock%}

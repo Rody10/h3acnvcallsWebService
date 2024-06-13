@@ -1,4 +1,5 @@
 from flask import Flask
+from views import setup_routes
 import os
 import db
 app = Flask(__name__)
@@ -7,10 +8,7 @@ app = Flask(__name__)
 if not os.path.exists("database.db"):
     db.create_database()
 
-
-@app.route("/")
-def hello_world():
-    return "Hello World!"
+setup_routes(app)
 
 if __name__ == "__main__":
     app.run()

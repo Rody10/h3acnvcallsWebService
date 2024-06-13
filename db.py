@@ -1,6 +1,5 @@
 import sqlite3, os, csv
 
-
 def import_tsv(file_path, table_name, cursor):
         with open(file_path, "r") as file:
                 reader = csv.reader(file, delimiter="\t")
@@ -20,6 +19,7 @@ def create_database():
     # if the database did not exist, create the tables
     if not database_exists:
         cursor = conn.cursor()
+        # delly_cnv table focuses specifically on CNVs detected by delly in CNV mode.
         cursor.execute('''CREATE TABLE delly_cnv (
                         chrom TEXT,
                         start INTEGER,
@@ -33,7 +33,8 @@ def create_database():
                         cn6 INTEGER, 
                         cn7plus INTEGER
                         )''')
-
+        # variants table combines data from multiple tools (manta, delly, smoove and gridss) to provide
+        # a comprehensive list of various types of structural variants.
         cursor.execute('''CREATE TABLE variants (
                         chrom TEXT, 
                         start INTEGER, 
@@ -51,7 +52,7 @@ def create_database():
         import_tsv("tsv_files/gridss.tsv","variants",cursor)
         import_tsv("tsv_files/delly_cnv.tsv","delly_cnv",cursor)
 
-        # Create indexes
+        # create indexes
         cursor.execute('CREATE INDEX dcnv_end ON delly_cnv(chrom, end)')
         cursor.execute('CREATE INDEX dcnv_start ON delly_cnv(chrom, start)')
         cursor.execute('CREATE INDEX classifier_ind ON variants(classifier)')
