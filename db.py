@@ -62,5 +62,75 @@ def create_database():
 
         conn.commit()
         cursor.close()
-        conn.close()                        
+        conn.close() 
+
+def get_database():
+      conn = sqlite3.connect("database.db")
+      conn.row_factory = sqlite3.Row
+      return conn
+
+
+def query_delly_cnv_table(           
+            chromosome,
+            start_position,
+            end_position,
+            number_of_calls_with_0_copies,
+            number_of_calls_with_1_copy,
+            number_of_calls_with_2_copies,
+            number_of_calls_with_3_copies,
+            number_of_calls_with_4_copies,
+            number_of_calls_with_5_copies,
+            number_of_calls_with_6_copies,
+            number_of_calls_with_7_or_more_copies):
+        if (chromosome == None):
+               chromosome = "*"
+        if (start_position == None):
+               start_position = "*"
+        if (end_position == None):
+               end_position = "*"
+        if (number_of_calls_with_0_copies == None):
+               number_of_calls_with_0_copies = "*"
+        if (number_of_calls_with_1_copy == None):
+               number_of_calls_with_1_copy = "*"
+        if (number_of_calls_with_2_copies == None):
+               number_of_calls_with_2_copies = "*"
+        if (number_of_calls_with_3_copies == None):
+               number_of_calls_with_3_copies = "*"
+        if (number_of_calls_with_4_copies == None):
+               number_of_calls_with_4_copies = "*"
+        if (number_of_calls_with_5_copies == None):
+               number_of_calls_with_5_copies = "*"
+        if (number_of_calls_with_6_copies == None):
+               number_of_calls_with_6_copies = "*"
+        if (number_of_calls_with_7_or_more_copies == None):
+               number_of_calls_with_7_or_more_copies = "*"
+
+        conn = get_database()
+        cursor = conn.cursor()
+
+        cursor.execute('''SELECT * FROM delly_cnv WHERE
+                    chrom = ?,
+                    start = ?,
+                    end = ?,
+                    cn0 = ?,
+                    cn1 = ?,
+                    cn2 = ?,
+                    cn3 = ?,
+                    cn4 = ?,
+                    cn5 = ?,
+                    cn6 = ?,
+                    cn7plus = ?, ''',
+                    chromosome,
+                    start_position,
+                    end_position,
+                    number_of_calls_with_0_copies,
+                    number_of_calls_with_1_copy,
+                    number_of_calls_with_2_copies,
+                    number_of_calls_with_3_copies,
+                    number_of_calls_with_4_copies,
+                    number_of_calls_with_5_copies,
+                    number_of_calls_with_6_copies,
+                    number_of_calls_with_7_or_more_copies)
+
+                       
 
