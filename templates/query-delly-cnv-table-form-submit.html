@@ -1,0 +1,28 @@
+{% extends "index.html" %}
+{% block content %}
+
+<div class="header">
+    <div class="icon-left">
+        <a href="/"> 
+            <img src="../static/icons/back-arrow-icon.svg" alt="Back Arrow" class="help-icon">
+        </a>           
+    </div>
+    <div class="icon-center">                
+        <a href="/"> 
+            <img src="../static/icons/home-icon.svg" alt="Home" class="home-icon">
+        </a>
+    </div>           
+    <div class="icon-right">
+        <a href="/"> 
+            <img src="../static/icons/help-icon.svg" alt="Help" class="help-icon">
+        </a>
+    </div>                                  
+</div>
+
+<p> <b>chrom start end cn0 cn1 cn2 cn3 cn4 cn5 cn6 cn7plus </b> </p>
+{% for result in results %}
+    <p>{% for item in result %}
+        {{item}}
+    {% endfor %}</p>
+{% endfor %}  
+{% endblock %}

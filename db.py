@@ -82,55 +82,84 @@ def query_delly_cnv_table(
             number_of_calls_with_5_copies,
             number_of_calls_with_6_copies,
             number_of_calls_with_7_or_more_copies):
-        if (chromosome == None):
-               chromosome = "*"
+        print("in query_delly_cnv_table method")
+        if (chromosome == "any"):
+               chromosome = "%"
         if (start_position == None):
-               start_position = "*"
+               start_position = "%"
         if (end_position == None):
-               end_position = "*"
+               end_position = "%"
         if (number_of_calls_with_0_copies == None):
-               number_of_calls_with_0_copies = "*"
+               number_of_calls_with_0_copies = "%"
         if (number_of_calls_with_1_copy == None):
-               number_of_calls_with_1_copy = "*"
+               number_of_calls_with_1_copy = "%"
         if (number_of_calls_with_2_copies == None):
-               number_of_calls_with_2_copies = "*"
+               number_of_calls_with_2_copies = "%"
         if (number_of_calls_with_3_copies == None):
-               number_of_calls_with_3_copies = "*"
+               number_of_calls_with_3_copies = "%"
         if (number_of_calls_with_4_copies == None):
-               number_of_calls_with_4_copies = "*"
+               number_of_calls_with_4_copies = "%"
         if (number_of_calls_with_5_copies == None):
-               number_of_calls_with_5_copies = "*"
+               number_of_calls_with_5_copies = "%"
         if (number_of_calls_with_6_copies == None):
-               number_of_calls_with_6_copies = "*"
+               number_of_calls_with_6_copies = "%"
         if (number_of_calls_with_7_or_more_copies == None):
-               number_of_calls_with_7_or_more_copies = "*"
+               number_of_calls_with_7_or_more_copies = "%"
 
         conn = get_database()
         cursor = conn.cursor()
+        print("chrom: ", chromosome)
+        print("start: ", start_position)
+        print("end: ", end_position)
 
-        cursor.execute('''SELECT * FROM delly_cnv WHERE
-                    chrom = ?,
-                    start = ?,
-                    end = ?,
-                    cn0 = ?,
-                    cn1 = ?,
-                    cn2 = ?,
-                    cn3 = ?,
-                    cn4 = ?,
-                    cn5 = ?,
-                    cn6 = ?,
-                    cn7plus = ?, ''',
+           
+        #query = '''
+        #   SELECT * FROM delly_cnv 
+        #    WHERE chrom LIKE ?
+        #    AND start LIKE ?
+        #    AND end LIKE ?
+        #    AND cn0 LIKE ?
+        #    AND cn1 LIKE ?
+        #   AND cn2 LIKE ?
+        #    AND cn3 LIKE ?
+        #   AND cn4 LIKE ?
+        #   AND cn5 LIKE ?
+        #    AND cn6 LIKE ?
+        #    AND cn7plus LIKE ?
+        #    LIMIT 5
+        #    '''
+        query = '''
+            SELECT * FROM delly_cnv 
+            WHERE chrom LIKE ?
+            AND (start > ?)
+            AND (end < ?)
+            LIMIT 5
+            '''
+        
+        #cursor.execute(query, (
+        #            chromosome,
+        #            start_position,
+        #            end_position,
+        #            number_of_calls_with_0_copies,
+        #            number_of_calls_with_1_copy,
+        #            number_of_calls_with_2_copies,
+        #            number_of_calls_with_3_copies,
+        #            number_of_calls_with_4_copies,
+        #            number_of_calls_with_5_copies,
+        #            number_of_calls_with_6_copies,
+        #            number_of_calls_with_7_or_more_copies
+        #       ))
+
+        cursor.execute(query, (
                     chromosome,
                     start_position,
-                    end_position,
-                    number_of_calls_with_0_copies,
-                    number_of_calls_with_1_copy,
-                    number_of_calls_with_2_copies,
-                    number_of_calls_with_3_copies,
-                    number_of_calls_with_4_copies,
-                    number_of_calls_with_5_copies,
-                    number_of_calls_with_6_copies,
-                    number_of_calls_with_7_or_more_copies)
+                    end_position,        
+               ))
+
+        results = cursor.fetchall()
+        conn.close
+        print("results: ", results)
+        return results
 
                        
 
