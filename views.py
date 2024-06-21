@@ -52,6 +52,9 @@ def setup_routes(app):
         else:
             return render_template("query-delly-cnv-table.html", form=form) # if validation fails return the page
 
-        
+    # TO be completed 
+    @app.route("/download-delly-cnv-query-results", methods=["GET"])
+    def query_delly_cnv_table_form_submit():
+        return None   
 
 

@@ -55,6 +55,8 @@
         </tbody>
     </table>
 
+    <p> </p>
+
     <div class="pagination">
         {% if page > 1 %}
         <a href="{{ url_for('query_delly_cnv_table_form_submit', chromosome=form.chromosome.data, start_position=form.start_position.data, end_position=form.end_position.data, page=page-1) }}">&laquo; Previous</a>
@@ -64,6 +66,9 @@
         <a href="{{ url_for('query_delly_cnv_table_form_submit', chromosome=form.chromosome.data, start_position=form.start_position.data, end_position=form.end_position.data, page=page+1) }}">Next &raquo;</a>
         {% endif %}
     </div>
+
+    <p> </p>
+    <button type="submit" class="query-btn" onclick="window.location.href='/download-delly-cnv-query-results'">Export results as CSV</button>
 
 </div>
 

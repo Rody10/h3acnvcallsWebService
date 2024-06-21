@@ -2,6 +2,7 @@ from flask import Flask
 from views import setup_routes
 import os
 import db
+import csv
 app = Flask(__name__)
 
 # check if database exists. If it does not exist, create the database
