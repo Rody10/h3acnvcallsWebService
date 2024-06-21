@@ -18,35 +18,39 @@ def setup_routes(app):
         
         form = QueryDellyCNVTableForm(request.args)
         print("in route handler method")
-        print(form.validate())
         if form.validate():
             chromosome = request.args["chromosome"]
-            print("chromosome: ", chromosome)
             start_position = request.args["start_position"]
             end_position = request.args["end_position"]
-            number_of_calls_with_0_copies = request.args["number_of_calls_with_0_copies"]
-            number_of_calls_with_1_copy = request.args["number_of_calls_with_1_copy"]
-            number_of_calls_with_2_copies = request.args["number_of_calls_with_2_copies"]
-            number_of_calls_with_3_copies = request.args["number_of_calls_with_3_copies"]
-            number_of_calls_with_4_copies = request.args["number_of_calls_with_4_copies"]
-            number_of_calls_with_5_copies = request.args["number_of_calls_with_5_copies"]
-            number_of_calls_with_6_copies = request.args["number_of_calls_with_6_copies"]
-            number_of_calls_with_7_or_more_copies = request.args["number_of_calls_with_7_or_more_copies"]
-
-            results = db.query_delly_cnv_table(
-                                            chromosome,
-                                            start_position,
-                                            end_position,
-                                            number_of_calls_with_0_copies,
-                                            number_of_calls_with_1_copy,
-                                            number_of_calls_with_2_copies,
-                                            number_of_calls_with_3_copies,
-                                            number_of_calls_with_4_copies,
-                                            number_of_calls_with_5_copies,
-                                            number_of_calls_with_6_copies,
-                                            number_of_calls_with_7_or_more_copies)
+            if (chromosome == "any"):
+                chromosome = "%"
+            if (start_position == ""):
+               start_position = "11626" # lowest value for the column
+            if (end_position == ""):
+               end_position = "248945995" # highest value for the column
             
-            return render_template("query-delly-cnv-table-form-submit.html", results=results)
+            page = int(request.args.get("page", 1))
+            page_size = 10 # number of rows to display on each page
+
+            total_records = db.get_total_records(
+                chromosome,
+                start_position,
+                end_position    
+            )
+
+            results = db.query_delly_cnv_table_paginated(
+                chromosome,
+                start_position,
+                end_position,
+                page,
+                page_size
+            )
+
+            total_pages = (total_records + page_size - 1) // page_size
+            
+            return render_template("query-delly-cnv-table-form-submit.html", form=form, results=results, page=page, total_pages=total_pages)
+        else:
+            return render_template("query-delly-cnv-table.html", form=form) # if validation fails return the page
 
         
 

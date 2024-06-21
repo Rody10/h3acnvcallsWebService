@@ -52,7 +52,7 @@ def create_database():
         import_tsv("tsv_files/gridss.tsv","variants",cursor)
         import_tsv("tsv_files/delly_cnv.tsv","delly_cnv",cursor)
 
-        # create indexes
+        # create indexes, helps speed up searches
         cursor.execute('CREATE INDEX dcnv_end ON delly_cnv(chrom, end)')
         cursor.execute('CREATE INDEX dcnv_start ON delly_cnv(chrom, start)')
         cursor.execute('CREATE INDEX classifier_ind ON variants(classifier)')
@@ -73,39 +73,9 @@ def get_database():
 def query_delly_cnv_table(           
             chromosome,
             start_position,
-            end_position,
-            number_of_calls_with_0_copies,
-            number_of_calls_with_1_copy,
-            number_of_calls_with_2_copies,
-            number_of_calls_with_3_copies,
-            number_of_calls_with_4_copies,
-            number_of_calls_with_5_copies,
-            number_of_calls_with_6_copies,
-            number_of_calls_with_7_or_more_copies):
+            end_position):
+        
         print("in query_delly_cnv_table method")
-        if (chromosome == "any"):
-               chromosome = "%"
-        if (start_position == None):
-               start_position = "%"
-        if (end_position == None):
-               end_position = "%"
-        if (number_of_calls_with_0_copies == None):
-               number_of_calls_with_0_copies = "%"
-        if (number_of_calls_with_1_copy == None):
-               number_of_calls_with_1_copy = "%"
-        if (number_of_calls_with_2_copies == None):
-               number_of_calls_with_2_copies = "%"
-        if (number_of_calls_with_3_copies == None):
-               number_of_calls_with_3_copies = "%"
-        if (number_of_calls_with_4_copies == None):
-               number_of_calls_with_4_copies = "%"
-        if (number_of_calls_with_5_copies == None):
-               number_of_calls_with_5_copies = "%"
-        if (number_of_calls_with_6_copies == None):
-               number_of_calls_with_6_copies = "%"
-        if (number_of_calls_with_7_or_more_copies == None):
-               number_of_calls_with_7_or_more_copies = "%"
-
         conn = get_database()
         cursor = conn.cursor()
         print("chrom: ", chromosome)
@@ -113,21 +83,6 @@ def query_delly_cnv_table(
         print("end: ", end_position)
 
            
-        #query = '''
-        #   SELECT * FROM delly_cnv 
-        #    WHERE chrom LIKE ?
-        #    AND start LIKE ?
-        #    AND end LIKE ?
-        #    AND cn0 LIKE ?
-        #    AND cn1 LIKE ?
-        #   AND cn2 LIKE ?
-        #    AND cn3 LIKE ?
-        #   AND cn4 LIKE ?
-        #   AND cn5 LIKE ?
-        #    AND cn6 LIKE ?
-        #    AND cn7plus LIKE ?
-        #    LIMIT 5
-        #    '''
         query = '''
             SELECT * FROM delly_cnv 
             WHERE chrom LIKE ?
@@ -135,21 +90,6 @@ def query_delly_cnv_table(
             AND (end < ?)
             LIMIT 5
             '''
-        
-        #cursor.execute(query, (
-        #            chromosome,
-        #            start_position,
-        #            end_position,
-        #            number_of_calls_with_0_copies,
-        #            number_of_calls_with_1_copy,
-        #            number_of_calls_with_2_copies,
-        #            number_of_calls_with_3_copies,
-        #            number_of_calls_with_4_copies,
-        #            number_of_calls_with_5_copies,
-        #            number_of_calls_with_6_copies,
-        #            number_of_calls_with_7_or_more_copies
-        #       ))
-
         cursor.execute(query, (
                     chromosome,
                     start_position,
@@ -160,6 +100,55 @@ def query_delly_cnv_table(
         conn.close
         print("results: ", results)
         return results
+
+
+def get_total_records(chromosome, start_position, end_position):
+    conn = get_database()
+    cursor = conn.cursor()
+    
+    query = '''
+        SELECT COUNT (*) FROM delly_cnv 
+            WHERE chrom LIKE ?
+            AND (start > ?)
+            AND (end < ?)
+        '''
+    cursor.execute(query, (
+        chromosome,
+        start_position,
+        end_position    
+    ))
+    total_records = cursor.fetchone()[0]
+    conn.close()
+    
+    return total_records
+
+def query_delly_cnv_table_paginated(chromosome, start_position, end_position, page, page_size):
+    offset = (page - 1) * page_size
+    
+    query = '''
+        SELECT * FROM delly_cnv 
+            WHERE chrom LIKE ?
+            AND (start > ?)
+            AND (end < ?)
+            LIMIT ?
+            OFFSET ?
+        '''
+    conn = get_database()
+    cursor = conn.cursor()
+    print("in query_delly_cnv_table_paginated - chromosome :", chromosome)
+    print("in query_delly_cnv_table_paginated - page_size :", page_size)
+    print("in query_delly_cnv_table_paginated - offset :", offset)
+    cursor.execute(query, (
+        chromosome,
+        start_position,
+        end_position,
+        page_size,
+        offset
+    ))
+    results = cursor.fetchall()
+    conn.close()
+    
+    return results
 
                        
 
