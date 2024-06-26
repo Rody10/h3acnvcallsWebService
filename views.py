@@ -1,5 +1,5 @@
 from flask import render_template, request, redirect, url_for, jsonify
-import forms, db
+import forms, db, download
 from forms import QueryDellyCNVTableForm
 
 def setup_routes(app):
@@ -54,7 +54,45 @@ def setup_routes(app):
 
     # TO be completed 
     @app.route("/download-delly-cnv-query-results", methods=["GET"])
-    def query_delly_cnv_table_form_submit():
-        return None   
+    def download_delly_cnv_query_results():
+        form = QueryDellyCNVTableForm(request.args)
+        # i am not getting parameters here, fix it
+        print("in route handler method")
+        print("checking form", form.validate())
+        print(request)
+        if form.validate():
+            chromosome = request.args["chromosome"]
+            print("Start of validation", chromosome)
+            start_position = request.args["start_position"]
+            end_position = request.args["end_position"]
+            if (chromosome == "any"):
+                chromosome = "%"
+            if (start_position == ""):
+               start_position = "11626" # lowest value for the column
+            if (end_position == ""):
+               end_position = "248945995" # highest value for the column
+                       
+            print("finished validation")
+            results = db.query_delly_cnv_table_not_paginated(
+                chromosome,
+                start_position,
+                end_position,
+            )
+            
+
+            return download.download(results, [
+                            "Chromosome",
+                            "Start Position",
+                            "End Position",
+                            "CN0",
+                            "CN1",
+                            "CN2",
+                            "CN3",
+                            "CN4",
+                            "CN5",
+                            "CN6",
+                            "CN7plus"])
+        else:
+            return render_template("query-delly-cnv-table.html", form=form)
 
 

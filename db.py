@@ -150,5 +150,26 @@ def query_delly_cnv_table_paginated(chromosome, start_position, end_position, pa
     
     return results
 
+def query_delly_cnv_table_not_paginated(chromosome, start_position, end_position):
+    
+    query = '''
+        SELECT * FROM delly_cnv 
+            WHERE chrom LIKE ?
+            AND (start > ?)
+            AND (end < ?)
+        '''
+    conn = get_database()
+    cursor = conn.cursor()
+    print("in query_delly_cnv_table_not_paginated - chromosome :", chromosome)
+    cursor.execute(query, (
+        chromosome,
+        start_position,
+        end_position,
+    ))
+    results = cursor.fetchall()
+    conn.close()
+    
+    return results
+
                        
 
