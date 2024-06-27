@@ -1,0 +1,67 @@
+{% extends "index.html" %}
+{%block content%}
+<div class="header">
+    <div class="icon-left">
+        <a href="/"> 
+            <img src="../static/icons/back-arrow-icon.svg" alt="Back Arrow" class="help-icon">
+        </a>           
+    </div>
+    <div class="icon-center">                
+        <a href="/"> 
+            <img src="../static/icons/home-icon.svg" alt="Home" class="home-icon">
+        </a>
+    </div>           
+    <div class="icon-right">
+        <a href="/"> 
+            <img src="../static/icons/help-icon.svg" alt="Help" class="help-icon">
+        </a>
+    </div>                                  
+</div>
+<div class="form-container">
+    <form method="GET" class="forms" action="/query-both-tables-form-submit">
+        <div class="form-wrapper">
+            <div class="form-section">
+                <h2>Delly_cnv table:</h2>
+                <div class="form-group">
+                    {{ form.delly_cnv_chromosome.label }} 
+                    {{ form.delly_cnv_chromosome(style="text-align: center;") }}
+                </div>
+                <div class="form-group">
+                    {{ form.delly_cnv_start_position.label }} 
+                    {{ form.delly_cnv_start_position(style="text-align: center;") }}
+                </div>
+                <div class="form-group">
+                    {{ form.delly_cnv_end_position.label }} 
+                    {{ form.delly_cnv_end_position(style="text-align: center;") }}
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>Variants <br> table:</h2> <!-- <br> here is just to make text boxes align so that the form looks nicer-->
+                <div class="form-group">
+                    {{ form.variants_chromosome.label }} 
+                    {{ form.variants_chromosome(style="text-align: center;") }}
+                </div>
+                <div class="form-group">
+                    {{ form.variants_start_position.label }} 
+                    {{ form.variants_start_position(style="text-align: center;") }}
+                </div>
+                <div class="form-group">
+                    {{ form.variants_end_position.label }} 
+                    {{ form.variants_end_position(style="text-align: center;") }}
+                </div>
+                <div class="form-group">
+                    {{ form.variants_type.label }} 
+                    {{ form.variants_type(style="text-align: center;") }}
+                </div>
+                <div class="form-group">
+                    {{ form.variants_classifier.label }} 
+                    {{ form.variants_classifier(style="text-align: center;") }}
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="query-btn">Submit query</button>
+    </form>
+</div>
+
+{%endblock%}

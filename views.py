@@ -1,6 +1,6 @@
 from flask import render_template, request, redirect, url_for, jsonify
 import forms, db, download
-from forms import QueryDellyCNVTableForm, QueryVariantsTableForm
+from forms import QueryDellyCNVTableForm, QueryVariantsTableForm, QueryBothTablesForm
 
 def setup_routes(app):
 
@@ -180,3 +180,7 @@ def setup_routes(app):
         else:
             return render_template("query-variants-table.html", form=form)
 
+    @app.route("/query-both-tables", methods=["GET"])
+    def query_both_tables():
+        form = QueryBothTablesForm()
+        return render_template("query-both-tables.html", form=form)

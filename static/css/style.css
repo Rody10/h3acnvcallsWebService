@@ -121,6 +121,24 @@ p {
     background-color: #0056b3;
 }
 
+.form-wrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+.form-section {
+    flex: 1;
+    padding: 10px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-section h2 {
+    text-align: center;
+}
+
 /*results table styling*/
 .results-container {
     margin: 0 auto;
