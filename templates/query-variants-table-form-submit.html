@@ -3,7 +3,7 @@
 
 <div class="header">
     <div class="icon-left">
-        <a href="/query-delly-cnv-table"> 
+        <a href="/query-variants-table"> 
             <img src="../static/icons/back-arrow-icon.svg" alt="Back Arrow" class="help-icon">
         </a>           
     </div>
@@ -26,14 +26,9 @@
                 <th>Chromosome</th>
                 <th>Start Position</th>
                 <th>End Position</th>
-                <th>CN0</th>
-                <th>CN1</th>
-                <th>CN2</th>
-                <th>CN3</th>
-                <th>CN4</th>
-                <th>CN5</th>
-                <th>CN6</th>
-                <th>CN7plus</th>
+                <th>Type</th>
+                <th>AC</th>
+                <th>AH</th>
             </tr>
         </thead>
         <tbody>
@@ -42,14 +37,10 @@
                 <td>{{ row['chrom'] }}</td>
                 <td>{{ row['start'] }}</td>
                 <td>{{ row['end'] }}</td>
-                <td>{{ row['cn0'] }}</td>               
-                <td>{{ row['cn1'] }}</td>
-                <td>{{ row['cn2'] }}</td>
-                <td>{{ row['cn3'] }}</td>
-                <td>{{ row['cn4'] }}</td>
-                <td>{{ row['cn5'] }}</td>
-                <td>{{ row['cn6'] }}</td>
-                <td>{{ row['cn7plus'] }}</td>
+                <td>{{ row['type'] }}</td>               
+                <td>{{ row['ac'] }}</td>
+                <td>{{ row['ah'] }}</td>
+                <td>{{ row['classifier'] }}</td>
             </tr>
             {% endfor %}
         </tbody>
@@ -59,17 +50,17 @@
 
     <div class="pagination">
         {% if page > 1 %}
-        <a href="{{ url_for('query_delly_cnv_table_form_submit', chromosome=form.chromosome.data, start_position=form.start_position.data, end_position=form.end_position.data, page=page-1) }}">&laquo; Previous</a>
+        <a href="{{ url_for('query_variants_table_form_submit', chromosome=form.chromosome.data, start_position=form.start_position.data, end_position=form.end_position.data, type=form.type.data, classifier=form.classifier.data, page=page-1) }}">&laquo; Previous</a>
         {% endif %}
         <span>Page {{ page }} of {{ total_pages }}</span>
         {% if page < total_pages %}
-        <a href="{{ url_for('query_delly_cnv_table_form_submit', chromosome=form.chromosome.data, start_position=form.start_position.data, end_position=form.end_position.data, page=page+1) }}">Next &raquo;</a>
+        <a href="{{ url_for('query_variants_table_form_submit', chromosome=form.chromosome.data, start_position=form.start_position.data, end_position=form.end_position.data, type=form.type.data, classifier=form.classifier.data, page=page+1) }}">Next &raquo;</a>
         {% endif %}
         <!-- <a href="{{ url_for('download_delly_cnv_query_results', chromosome=form.chromosome.data, start_position=form.start_position.data, end_position=form.end_position.data) }}">Download results as CSV</a> -->
     </div>
     <p> </p>
     <button type="button" class="query-btn" 
-        onclick="window.location.href='{{ url_for('download_delly_cnv_query_results', chromosome=form.chromosome.data, start_position=form.start_position.data, end_position=form.end_position.data) }}'">
+        onclick="window.location.href='{{ url_for('download_variants_query_results', chromosome=form.chromosome.data, start_position=form.start_position.data, end_position=form.end_position.data, type=form.type.data, classifier=form.classifier.data) }}'">
         Export results as CSV
     </button>
 

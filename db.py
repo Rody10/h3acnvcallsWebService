@@ -6,7 +6,6 @@ def import_tsv(file_path, table_name, cursor):
                 columns = next(reader) # Skip the header row
 
                 quoted_columns = [f'"{col}"' for col in columns]
-                print(quoted_columns)
 
                 query = f"INSERT INTO {table_name} ({', '.join(quoted_columns)}) VALUES ({', '.join(['?'] * len(columns))})"
                 for data in reader:
@@ -75,12 +74,8 @@ def query_delly_cnv_table(
             start_position,
             end_position):
         
-        print("in query_delly_cnv_table method")
         conn = get_database()
         cursor = conn.cursor()
-        print("chrom: ", chromosome)
-        print("start: ", start_position)
-        print("end: ", end_position)
 
            
         query = '''
@@ -98,11 +93,10 @@ def query_delly_cnv_table(
 
         results = cursor.fetchall()
         conn.close
-        print("results: ", results)
         return results
 
 
-def get_total_records(chromosome, start_position, end_position):
+def get_total_records_delly_cnv_query(chromosome, start_position, end_position):
     conn = get_database()
     cursor = conn.cursor()
     
@@ -135,9 +129,6 @@ def query_delly_cnv_table_paginated(chromosome, start_position, end_position, pa
         '''
     conn = get_database()
     cursor = conn.cursor()
-    print("in query_delly_cnv_table_paginated - chromosome :", chromosome)
-    print("in query_delly_cnv_table_paginated - page_size :", page_size)
-    print("in query_delly_cnv_table_paginated - offset :", offset)
     cursor.execute(query, (
         chromosome,
         start_position,
@@ -160,7 +151,6 @@ def query_delly_cnv_table_not_paginated(chromosome, start_position, end_position
         '''
     conn = get_database()
     cursor = conn.cursor()
-    print("in query_delly_cnv_table_not_paginated - chromosome :", chromosome)
     cursor.execute(query, (
         chromosome,
         start_position,
@@ -171,5 +161,82 @@ def query_delly_cnv_table_not_paginated(chromosome, start_position, end_position
     
     return results
 
+def get_total_records_variants_query(chromosome, start_position, end_position, type, classifier):
+    conn = get_database()
+    cursor = conn.cursor()
+    
+    query = '''
+        SELECT COUNT (*) FROM variants 
+            WHERE chrom LIKE ?
+            AND (start > ?)
+            AND (end < ?)
+            AND type LIKE ?
+            AND classifier LIKE ?
+        '''
+    cursor.execute(query, (
+        chromosome,
+        start_position,
+        end_position,
+        type,
+        classifier  
+    ))
+    total_records = cursor.fetchone()[0]
+    conn.close()
+    
+    return total_records
+
+def query_variants_table_paginated(chromosome, start_position, end_position, type, classifier, page, page_size):
+    print("in query_variants_table_paginated")
+    offset = (page - 1) * page_size
+    
+    query = '''
+        SELECT * FROM variants 
+            WHERE chrom LIKE ?
+            AND (start > ?)
+            AND (end < ?)
+            AND type LIKE ?
+            AND classifier LIKE ?
+            LIMIT ?
+            OFFSET ?
+        '''
+    conn = get_database()
+    cursor = conn.cursor()
+    cursor.execute(query, (
+        chromosome,
+        start_position,
+        end_position,
+        type,
+        classifier,
+        page_size,
+        offset
+    ))
+    results = cursor.fetchall()
+    conn.close()
+    
+    return results
+
+def query_variants_table_not_paginated(chromosome, start_position, end_position, type, classifier):
+    
+    query = '''
+        SELECT * FROM variants
+            WHERE chrom LIKE ?
+            AND (start > ?)
+            AND (end < ?)
+            AND type LIKE ?
+            AND classifier LIKE ?
+        '''
+    conn = get_database()
+    cursor = conn.cursor()
+    cursor.execute(query, (
+        chromosome,
+        start_position,
+        end_position,
+        type,
+        classifier
+    ))
+    results = cursor.fetchall()
+    conn.close()
+    
+    return results
                        
 
