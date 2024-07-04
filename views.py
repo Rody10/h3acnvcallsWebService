@@ -161,7 +161,7 @@ def setup_routes(app):
                 type = "%"
             if (classifier == "any"):
                 classifier = "%"
-                       
+            
             results = db.query_variants_table_not_paginated(
                 chromosome,
                 start_position,
@@ -184,3 +184,130 @@ def setup_routes(app):
     def query_both_tables():
         form = QueryBothTablesForm()
         return render_template("query-both-tables.html", form=form)
+    
+    @app.route("/query-both-tables-form-submit", methods=["GET"])
+    def query_both_tables_form_submit():
+        
+        form = QueryBothTablesForm(request.args)
+        if form.validate():
+            query_both_tables_chromosome = request.args["query_both_tables_chromosome"]
+            delly_cnv_start_position = request.args["delly_cnv_start_position"]
+            delly_cnv_end_position = request.args["delly_cnv_end_position"]
+            variants_start_position = request.args["variants_start_position"]
+            variants_end_position = request.args["variants_end_position"]
+            variants_type = request.args["variants_type"]
+            variants_classifier = request.args["variants_classifier"]
+            if (query_both_tables_chromosome == "any"):
+                query_both_tables_chromosome = "%"
+            if (delly_cnv_start_position == ""):
+               delly_cnv_start_position = "11626" # lowest value for the column
+            if (delly_cnv_end_position == ""):
+               delly_cnv_end_position = "248945995" # highest value for the column
+            if (variants_start_position == ""):
+                variants_start_position = "1" # lowest value for the column
+            if (variants_end_position == ""):
+                variants_end_position = "248946070" # highest value for the column
+            if (variants_type == "any"):
+                variants_type = "%"
+            if (variants_classifier == "any"):
+                variants_classifier = "%"
+
+            # temp for debugging
+            #query_both_tables_chromosome = "chr1"
+            #delly_cnv_start_position = "11626"
+            #delly_cnv_end_position = "248945995"
+            #variants_start_position = "11626"
+            #variants_end_position = "248945995"
+            #variants_type = "DEL"
+            #
+            
+            
+            page = int(request.args.get("page", 1))
+            page_size = 10 # number of rows to display on each page - make this GLOBAL?
+    
+         
+
+            total_records = db.get_total_records_both_tables_query(
+                query_both_tables_chromosome,
+                delly_cnv_start_position,
+                delly_cnv_end_position,
+                variants_start_position,
+                variants_end_position,
+                variants_type,
+                variants_classifier  
+            )
+
+            results = db. query_both_tables_paginated(
+                query_both_tables_chromosome,
+                delly_cnv_start_position,
+                delly_cnv_end_position,
+                variants_start_position,
+                variants_end_position,
+                variants_type,
+                variants_classifier,  
+                page,
+                page_size   
+            )
+
+
+            total_pages = (total_records + page_size - 1) // page_size
+            
+            return render_template("query-both-tables-form-submit.html", form=form, results=results, page=page, total_pages=total_pages)
+        else:
+            return render_template("query-both-tables.html", form=form) # if validation fails return the page
+    
+    @app.route("/download_both_tables_query_results", methods=["GET"])
+    def download_both_tables_query_results():
+        form = QueryBothTablesForm(request.args)
+        if form.validate():
+            query_both_tables_chromosome = request.args["query_both_tables_chromosome"]
+            delly_cnv_start_position = request.args["delly_cnv_start_position"]
+            delly_cnv_end_position = request.args["delly_cnv_end_position"]
+            variants_start_position = request.args["variants_start_position"]
+            variants_end_position = request.args["variants_end_position"]
+            variants_type = request.args["variants_type"]
+            variants_classifier = request.args["variants_classifier"]
+            if (query_both_tables_chromosome == "any"):
+                query_both_tables_chromosome = "%"
+            if (delly_cnv_start_position == ""):
+               delly_cnv_start_position = "11626" # lowest value for the column
+            if (delly_cnv_end_position == ""):
+               delly_cnv_end_position = "248945995" # highest value for the column
+            if (variants_start_position == ""):
+                variants_start_position = "1" # lowest value for the column
+            if (variants_end_position == ""):
+                variants_end_position = "248946070" # highest value for the column
+            if (variants_type == "any"):
+                variants_type = "%"
+            if (variants_classifier == "any"):
+                variants_classifier = "%"
+            
+            results = db. query_both_tables_not_paginated(
+                query_both_tables_chromosome,
+                delly_cnv_start_position,
+                delly_cnv_end_position,
+                variants_start_position,
+                variants_end_position,
+                variants_type,
+                variants_classifier     
+            )     
+            return download.download(results, [
+                            "Chromosome",
+                            "Delly_CNV Start Position",
+                            "Delly_CNV End Position",
+                            "CN0",
+                            "CN1",
+                            "CN2",
+                            "CN3",
+                            "CN4",
+                            "CN5",
+                            "CN6",
+                            "CN7PLUS",
+                            "Variants Start Position",
+                            "Variants End Position",
+                            "Type",
+                            "AC",
+                            "AH",
+                            "Classifier"])
+        else:
+            return render_template("query-variants-table.html", form=form)

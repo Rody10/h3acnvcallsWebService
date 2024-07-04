@@ -1,0 +1,90 @@
+{% extends "index.html" %}
+{% block content %}
+
+<div class="header">
+    <div class="icon-left">
+        <a href="/query-both-tables"> 
+            <img src="../static/icons/back-arrow-icon.svg" alt="Back Arrow" class="help-icon">
+        </a>           
+    </div>
+    <div class="icon-center">                
+        <a href="/"> 
+            <img src="../static/icons/home-icon.svg" alt="Home" class="home-icon">
+        </a>
+    </div>           
+    <div class="icon-right">
+        <a href="/"> 
+            <img src="../static/icons/help-icon.svg" alt="Help" class="help-icon">
+        </a>
+    </div>                                  
+</div>
+
+<div class="results-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Chromosome</th>
+                <th>Delly_CNV Start Position</th>
+                <th>Delly_CNV End Position</th>
+                <th>CN0</th>
+                <th>CN1</th>
+                <th>CN2</th>
+                <th>CN3</th>
+                <th>CN4</th>
+                <th>CN5</th>
+                <th>CN6</th>
+                <th>CN7PLUS</th>
+                <th>Variants Start Position</th>
+                <th>Variants End Position</th>
+                <th>Type</th>
+                <th>AC</th>
+                <th>AH</th>
+                <th>Classifier</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in results %}
+            <tr>
+                <td>{{ row['d_chrom'] }}</td>
+                <td>{{ row['d_start'] }}</td>
+                <td>{{ row['d_end'] }}</td>
+                <td>{{ row['d.cn0'] }}</td>               
+                <td>{{ row['d.cn1'] }}</td>
+                <td>{{ row['d.cn2'] }}</td>
+                <td>{{ row['d.cn3'] }}</td>
+                <td>{{ row['d.cn4'] }}</td>
+                <td>{{ row['d.cn5'] }}</td>
+                <td>{{ row['d.cn6'] }}</td>
+                <td>{{ row['d.cn7plus'] }}</td>
+                <td>{{ row['v_start'] }}</td>
+                <td>{{ row['v_end'] }}</td>
+                <td>{{ row['v.type'] }}</td>
+                <td>{{ row['v.ac'] }}</td>
+                <td>{{ row['v.ah'] }}</td>
+                <td>{{ row['v.classifier'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <p> </p>
+
+    <div class="pagination">
+        {% if page > 1 %}
+        <a href="{{ url_for('query_both_tables_form_submit', query_both_tables_chromosome=form.query_both_tables_chromosome.data, delly_cnv_start_position=form.delly_cnv_start_position.data, delly_cnv_end_position=form.delly_cnv_end_position.data, variants_start_position=form.variants_start_position.data, variants_end_position=form.variants_end_position.data, variants_type=form.variants_type.data, variants_classifier=form.variants_classifier.data, page=page-1) }}">&laquo; Previous</a>
+        {% endif %}
+        <span>Page {{ page }} of {{ total_pages }}</span>
+        {% if page < total_pages %}
+        <a href="{{ url_for('query_both_tables_form_submit', query_both_tables_chromosome=form.query_both_tables_chromosome.data, delly_cnv_start_position=form.delly_cnv_start_position.data, delly_cnv_end_position=form.delly_cnv_end_position.data, variants_start_position=form.variants_start_position.data, variants_end_position=form.variants_end_position.data, variants_type=form.variants_type.data, variants_classifier=form.variants_classifier.data, page=page+1) }}">Next &raquo;</a>
+        {% endif %}
+    </div>
+    <p> </p>
+    <button type="button" class="query-btn" 
+        onclick="window.location.href='{{ url_for('download_both_tables_query_results', query_both_tables_chromosome=form.query_both_tables_chromosome.data, delly_cnv_start_position=form.delly_cnv_start_position.data, delly_cnv_end_position=form.delly_cnv_end_position.data, variants_start_position=form.variants_start_position.data, variants_end_position=form.variants_end_position.data, variants_type=form.variants_type.data, variants_classifier=form.variants_classifier.data) }}'">
+        Export results as CSV
+    </button> 
+
+</div>
+
+
+{% endblock %}

@@ -19,13 +19,14 @@
 </div>
 <div class="form-container">
     <form method="GET" class="forms" action="/query-both-tables-form-submit">
+        <div class="form-group">
+            {{ form.query_both_tables_chromosome.label }} 
+            {{ form.query_both_tables_chromosome(style="text-align: center;") }}
+        </div>
         <div class="form-wrapper">
             <div class="form-section">
-                <h2>Delly_cnv table:</h2>
-                <div class="form-group">
-                    {{ form.delly_cnv_chromosome.label }} 
-                    {{ form.delly_cnv_chromosome(style="text-align: center;") }}
-                </div>
+                
+                <h2>Delly_cnv table</h2>
                 <div class="form-group">
                     {{ form.delly_cnv_start_position.label }} 
                     {{ form.delly_cnv_start_position(style="text-align: center;") }}
@@ -35,13 +36,8 @@
                     {{ form.delly_cnv_end_position(style="text-align: center;") }}
                 </div>
             </div>
-
             <div class="form-section">
-                <h2>Variants <br> table:</h2> <!-- <br> here is just to make text boxes align so that the form looks nicer-->
-                <div class="form-group">
-                    {{ form.variants_chromosome.label }} 
-                    {{ form.variants_chromosome(style="text-align: center;") }}
-                </div>
+                <h2>Variants <br> table</h2> <!-- <br> here is just to make text boxes align so that the form looks nicer-->
                 <div class="form-group">
                     {{ form.variants_start_position.label }} 
                     {{ form.variants_start_position(style="text-align: center;") }}

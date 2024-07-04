@@ -68,7 +68,7 @@ def get_database():
       conn.row_factory = sqlite3.Row
       return conn
 
-
+# delete?
 def query_delly_cnv_table(           
             chromosome,
             start_position,
@@ -238,5 +238,151 @@ def query_variants_table_not_paginated(chromosome, start_position, end_position,
     conn.close()
     
     return results
-                       
 
+
+def get_total_records_both_tables_query(chromosome, delly_cnv_start_position, delly_cnv_end_position, variants_start_position, variants_end_position, variants_type, variants_classifier):
+    conn = get_database()
+    cursor = conn.cursor()
+    
+    query = '''
+        SELECT 
+            COUNT(*) AS matching_rows
+        FROM 
+            variants v
+        JOIN 
+            delly_cnv d ON v.chrom = d.chrom
+                        AND v.start < d.end
+                        AND v.end > d.start
+        WHERE
+            v.type LIKE ?
+            AND v.classifier LIKE ?
+            AND v.chrom LIKE ?
+            AND v.start > ?
+            AND v.end < ?
+            AND d.start > ?
+            AND d.end < ?         
+        '''
+    cursor.execute(query, (
+        variants_type,
+        variants_classifier,
+        chromosome,
+        variants_start_position,
+        variants_end_position,
+        delly_cnv_start_position,
+        delly_cnv_end_position
+    ))
+    total_records = cursor.fetchone()[0]
+    conn.close()
+    return total_records
+
+def query_both_tables_paginated(chromosome, delly_cnv_start_position, delly_cnv_end_position, variants_start_position, variants_end_position, variants_type, variants_classifier,  page, page_size):
+    offset = (page - 1) * page_size
+    query = '''
+        SELECT 
+            v.chrom AS v_chrom, 
+            v.start AS v_start, 
+            v.end AS v_end, 
+            v.type, 
+            v.ac, 
+            v.ah, 
+            v.classifier,
+            d.chrom AS d_chrom, 
+            d.start AS d_start, 
+            d.end AS d_end, 
+            d.cn0, 
+            d.cn1, 
+            d.cn2, 
+            d.cn3, 
+            d.cn4, 
+            d.cn5, 
+            d.cn6, 
+            d.cn7plus
+        FROM 
+            variants v
+        JOIN 
+            delly_cnv d ON v.chrom = d.chrom
+                        AND v.start < d.end
+                        AND v.end > d.start
+        WHERE
+            v.type LIKE ?
+            AND v.classifier LIKE ?
+            AND v.chrom LIKE ?
+            AND v.start > ?
+            AND v.end < ?
+            AND d.start > ?
+            AND d.end < ?
+        LIMIT ?
+        OFFSET ?          
+        '''
+    conn = get_database()
+    cursor = conn.cursor()
+
+    cursor.execute(query, (
+        variants_type,
+        variants_classifier,
+        chromosome,
+        variants_start_position,
+        variants_end_position,
+        delly_cnv_start_position,
+        delly_cnv_end_position,
+        page_size,
+        offset
+    ))
+
+    results = cursor.fetchall()
+    conn.close()
+    print(results)
+    return results
+
+def query_both_tables_not_paginated(chromosome, delly_cnv_start_position, delly_cnv_end_position, variants_start_position, variants_end_position, variants_type, variants_classifier):
+    query = '''
+        SELECT 
+            v.chrom AS v_chrom, 
+            v.start AS v_start, 
+            v.end AS v_end, 
+            v.type, 
+            v.ac, 
+            v.ah, 
+            v.classifier,
+            d.chrom AS d_chrom, 
+            d.start AS d_start, 
+            d.end AS d_end, 
+            d.cn0, 
+            d.cn1, 
+            d.cn2, 
+            d.cn3, 
+            d.cn4, 
+            d.cn5, 
+            d.cn6, 
+            d.cn7plus
+        FROM 
+            variants v
+        JOIN 
+            delly_cnv d ON v.chrom = d.chrom
+                        AND v.start < d.end
+                        AND v.end > d.start
+        WHERE
+            v.type LIKE ?
+            AND v.classifier LIKE ?
+            AND v.chrom LIKE ?
+            AND v.start > ?
+            AND v.end < ?
+            AND d.start > ?
+            AND d.end < ?   
+        LIMIT 10000     
+        '''
+    conn = get_database()
+    cursor = conn.cursor()
+
+    cursor.execute(query, (
+        variants_type,
+        variants_classifier,
+        chromosome,
+        variants_start_position,
+        variants_end_position,
+        delly_cnv_start_position,
+        delly_cnv_end_position,
+    ))
+    results = cursor.fetchall()
+    conn.close()
+    return results
