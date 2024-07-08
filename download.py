@@ -3,7 +3,6 @@ import csv
 from flask import make_response
 
 def download(results, header_list):
-    print("in download method")
     sio_instance = StringIO()
     csv_writer = csv.writer(sio_instance)
     csv_writer.writerow(header_list) # write column headings

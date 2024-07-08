@@ -250,8 +250,7 @@ def setup_routes(app):
             )
 
 
-            total_pages = (total_records + page_size - 1) // page_size
-            
+            total_pages = (total_records + page_size - 1) // page_size  
             return render_template("query-both-tables-form-submit.html", form=form, results=results, page=page, total_pages=total_pages)
         else:
             return render_template("query-both-tables.html", form=form) # if validation fails return the page

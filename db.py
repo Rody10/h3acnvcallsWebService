@@ -278,14 +278,7 @@ def get_total_records_both_tables_query(chromosome, delly_cnv_start_position, de
 def query_both_tables_paginated(chromosome, delly_cnv_start_position, delly_cnv_end_position, variants_start_position, variants_end_position, variants_type, variants_classifier,  page, page_size):
     offset = (page - 1) * page_size
     query = '''
-        SELECT 
-            v.chrom AS v_chrom, 
-            v.start AS v_start, 
-            v.end AS v_end, 
-            v.type, 
-            v.ac, 
-            v.ah, 
-            v.classifier,
+        SELECT
             d.chrom AS d_chrom, 
             d.start AS d_start, 
             d.end AS d_end, 
@@ -296,7 +289,13 @@ def query_both_tables_paginated(chromosome, delly_cnv_start_position, delly_cnv_
             d.cn4, 
             d.cn5, 
             d.cn6, 
-            d.cn7plus
+            d.cn7plus, 
+            v.start AS v_start, 
+            v.end AS v_end, 
+            v.type, 
+            v.ac, 
+            v.ah, 
+            v.classifier
         FROM 
             variants v
         JOIN 
@@ -331,19 +330,15 @@ def query_both_tables_paginated(chromosome, delly_cnv_start_position, delly_cnv_
 
     results = cursor.fetchall()
     conn.close()
-    print(results)
+    for row in results:
+        print(row[4])
+        print(row[5])
+    #print("results_paginated: ", results)
     return results
 
 def query_both_tables_not_paginated(chromosome, delly_cnv_start_position, delly_cnv_end_position, variants_start_position, variants_end_position, variants_type, variants_classifier):
     query = '''
         SELECT 
-            v.chrom AS v_chrom, 
-            v.start AS v_start, 
-            v.end AS v_end, 
-            v.type, 
-            v.ac, 
-            v.ah, 
-            v.classifier,
             d.chrom AS d_chrom, 
             d.start AS d_start, 
             d.end AS d_end, 
@@ -354,7 +349,13 @@ def query_both_tables_not_paginated(chromosome, delly_cnv_start_position, delly_
             d.cn4, 
             d.cn5, 
             d.cn6, 
-            d.cn7plus
+            d.cn7plus, 
+            v.start AS v_start, 
+            v.end AS v_end, 
+            v.type, 
+            v.ac, 
+            v.ah, 
+            v.classifier
         FROM 
             variants v
         JOIN 
