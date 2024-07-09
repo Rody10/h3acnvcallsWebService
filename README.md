@@ -54,7 +54,7 @@ Ensure you have the following installed on your system:
 # Usage
 The web service is easy to use. The first page a user sees after accessing the application is shown below.
 
-![menu image](readme-images/menu.png)
+![menu image](readme-images/menu.PNG)
 
 A user can query either the delly_cnv table, variants table or both. In this example, a user queries the variants table.
 
