@@ -8,7 +8,51 @@ The application uses Flask, sqlite3 and Jinja2.
 
 ## Installation
 
-### Usage
+### Prerequisites
+
+Ensure you have the following installed on your system:
+
+- Python 3.x
+- `pip` (Python package installer)
+- `virtualenv` (optional, but recommended for creating a virtual environment)
+
+### Step-by-Step Installation
+
+1. **Clone the Repository**
+
+2. **Create a Virtual Environment**
+
+    python3 -m venv venv
+
+3. **Activate the Virtual Environment**
+
+    For macOS and Linux:
+        source venv/bin/activate
+
+    For Windows:
+        venv\Scripts\activate
+
+4. **Install Dependencies**
+
+    ip install -r requirements.txt
+
+5. **Set Environment Variables**
+
+    For macOS and Linux:
+        export FLASK_APP=app.py
+        export FLASK_ENV=development
+
+    For Windows:
+        set FLASK_APP=app.py
+        set FLASK_ENV=development
+
+6. **Run the application**
+
+    flask run
+
+
+
+# Usage
 
 
 
