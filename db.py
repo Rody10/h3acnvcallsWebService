@@ -330,10 +330,6 @@ def query_both_tables_paginated(chromosome, delly_cnv_start_position, delly_cnv_
 
     results = cursor.fetchall()
     conn.close()
-    for row in results:
-        print(row[4])
-        print(row[5])
-    #print("results_paginated: ", results)
     return results
 
 def query_both_tables_not_paginated(chromosome, delly_cnv_start_position, delly_cnv_end_position, variants_start_position, variants_end_position, variants_type, variants_classifier):
@@ -369,8 +365,7 @@ def query_both_tables_not_paginated(chromosome, delly_cnv_start_position, delly_
             AND v.start > ?
             AND v.end < ?
             AND d.start > ?
-            AND d.end < ?   
-        LIMIT 10000     
+            AND d.end < ?      
         '''
     conn = get_database()
     cursor = conn.cursor()

@@ -12,7 +12,7 @@
         </a>
     </div>           
     <div class="icon-right">
-        <a href="/"> 
+        <a href="#" id="help-btn"> 
             <img src="../static/icons/help-icon.svg" alt="Help" class="help-icon">
         </a>
     </div>                                  
@@ -34,4 +34,16 @@
         <button type="submit" class="query-btn">Submit query</button>
     </form>
 </div>
+
+<div id="help-popup" class="help-popup">
+    <button class="close-btn" id="close-btn">&times;</button>
+    <h2>Help Information</h2>
+    <p>Enter data for your query.</p>
+    <p>The <em>Start position</em> and <em>End position</em> fields specify the regions on chromosomes that will be considered by the query.</p>
+    <p>The results will have Copy number variants whose start positions are greater than <em>Start position</em> but whose end positions are less
+        than <em>End position</em></p>
+</div>
+<div id="help-popup-overlay" class="help-popup-overlay"></div>
+<script src="{{ url_for('static', filename='help-popup.js') }}"></script>
 {%endblock%}
+

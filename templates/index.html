@@ -19,19 +19,34 @@
                 </a>
             </div>           
             <div class="icon-right">
-                <a href="/"> 
+                <a href="#" id="help-btn"> 
                     <img src="../static/icons/help-icon.svg" alt="Help" class="help-icon">
                 </a>
             </div>                                  
         </div>
         <h1>Welcome to the h3acnvcallsWebService</h1>
         <p>This tool allows you to query a database that stores structural variants in human genomes.</p>
+
         <div class="buttons">
             <button class="query-btn" onclick="window.location.href='/query-delly-cnv-table'">Query delly_cnv table</button>
             <button class="query-btn" onclick="window.location.href='/query-variants-table'">Query variants table</button>
             <button class="query-btn" onclick="window.location.href='/query-both-tables'">Query both tables</button>
         </div>
+
+        <div id="help-popup" class="help-popup">
+            <button class="close-btn" id="close-btn">&times;</button>
+            <h2>Help Information</h2>
+            <p>To start querying the database, you can use the buttons to select the table you want to query.</p>
+            <p>The <em>delly_cnv table</em> has copy number variants information obtained from delly in CNV mode.</p>
+            <p>The <em>variants table</em> has structural variants information obtained from delly, manta, gridss and smoove.</p>
+            <p>&nbsp</p>
+            <p>To get information regarding the data used by this web service <a href="https://github.com/shaze/h3acnvcalls/tree/main/data" target="_blank" rel="noreferrer noopener">click here</a>.</p>
+        </div>
+        <div id="help-popup-overlay" class="help-popup-overlay"></div>
         {% endblock %}
+
     </div>
+
+    <script src="{{ url_for('static', filename='help-popup.js') }}"></script>
 </body>
 </html>
